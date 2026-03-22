@@ -57,7 +57,7 @@ Metrics:
 
 | Model                       | Accuracy | F1 Score |
 | --------------------------- | -------- | -------- |
-| Baseline DistilBERT         | 91.27%   | 0.9128   |
+| Baseline DistilBERT         | 91.26%   | 0.9128   |
 | MLM + DistilBERT (2 epochs) | 91.27%   | 0.9132   |
 
 ---

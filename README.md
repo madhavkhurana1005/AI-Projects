@@ -2,14 +2,14 @@
 
 ## 🚀 Overview
 
-This project explores whether **domain-adaptive pretraining using Masked Language Modeling (MLM)** improves downstream performance on a sentiment classification task.
+This project investigates whether **domain-adaptive pretraining using Masked Language Modeling (MLM)** improves downstream performance on a sentiment classification task.
 
 We fine-tune **DistilBERT** on the IMDB dataset in two stages:
 
 1. **MLM fine-tuning (unsupervised)** on IMDB text
 2. **Sentiment classification fine-tuning (supervised)**
 
-We then compare performance against a **baseline DistilBERT model** trained directly on classification.
+We then compare results against a **baseline DistilBERT model** trained directly on classification.
 
 ---
 
@@ -27,7 +27,7 @@ We then compare performance against a **baseline DistilBERT model** trained dire
 * Objective: Predict masked tokens
 * Technique:
 
-  * Concatenate text
+  * Concatenate text samples
   * Chunk into fixed-length sequences (256 tokens)
   * Apply dynamic masking (15%)
 
@@ -37,16 +37,16 @@ We then compare performance against a **baseline DistilBERT model** trained dire
 
 * Task: Binary sentiment classification (positive / negative)
 * Dataset: IMDB (50k reviews)
-* Model:
+* Models:
 
-  * Baseline: DistilBERT (no MLM)
-  * Proposed: MLM-adapted DistilBERT
+  * **Baseline**: DistilBERT (no MLM)
+  * **Proposed**: MLM-adapted DistilBERT
 
 ---
 
 ### 🔹 Step 3: Evaluation
 
-Metrics used:
+Metrics:
 
 * Accuracy
 * F1 Score
@@ -64,15 +64,15 @@ Metrics used:
 
 ## 🔍 Key Findings
 
-* MLM fine-tuning **did not significantly improve performance**
+* MLM fine-tuning showed **no significant improvement**
 * Both models performed nearly identically
-* Slight variation in F1 is negligible
+* Indicates strong baseline performance
 
 ---
 
 ## 🧠 Core Insight
 
-> **This experiment highlights that transfer learning gains are highly dependent on domain divergence rather than just additional pretraining.**
+> **Transfer learning gains depend more on domain difference than additional pretraining.**
 
 ---
 
@@ -81,53 +81,45 @@ Metrics used:
 ### ✅ Why No Improvement?
 
 * **Low domain gap**: IMDB reviews are similar to pretraining corpus
-* **Strong baseline**: DistilBERT already captures sentiment well
+* **Strong baseline**: DistilBERT already captures sentiment effectively
 * **Diminishing returns**: Additional MLM training adds limited value
 
 ---
 
-## 🔥 What This Demonstrates
+## 🧪 Error Analysis
 
-* Understanding of **self-supervised learning (MLM)**
-* Application of **transfer learning**
-* Ability to design **controlled experiments**
-* Capability to interpret **non-improving results correctly**
+The model exhibits consistent failure patterns across both baseline and MLM-adapted versions:
+
+* **Sarcasm / Contradictory Tone**:
+  The model struggles when positive words are used in a negative context (e.g., *“Great movie… I wasted 2 hours”*), indicating reliance on surface-level cues.
+
+* **Negation Handling**:
+  Phrases like *“not bad at all”* are often misclassified, showing limitations in understanding logical negation.
+
+* **Mixed Sentiment**:
+  Reviews containing both positive and negative opinions are difficult to classify due to binary labeling constraints.
+
+* **Long Reviews (Truncation Issue)**:
+  Important sentiment information appearing later in long reviews may be truncated due to fixed input length (256 tokens), leading to incorrect predictions.
+
+These patterns were observed across both models, suggesting that MLM fine-tuning did not significantly improve handling of nuanced linguistic structures.
 
 ---
 
 ## ⚠️ Limitations
 
-* Limited domain diversity (movie reviews only)
-* MLM training scale relatively small compared to original pretraining
-* Binary classification (does not capture nuanced sentiment)
+* Binary classification oversimplifies sentiment
+* Input length constraints (truncation) affect long reviews
+* Limited benefit from MLM due to domain similarity
 
 ---
 
 ## 🚀 Future Work
 
-* Apply MLM pretraining on **domain-specific datasets** (finance, legal, medical)
-* Increase training scale (more data, more epochs)
-* Explore larger models (BERT, RoBERTa)
-
----
-
-## 🧪 Error Analysis (Summary)
-
-Observed failure patterns:
-
-* Sarcasm and contradictory phrases
-* Mixed sentiment in long reviews
-* Negation handling (“not bad”, “not great”)
-
----
-
-## 🧭 Conclusion
-
-This project demonstrates that:
-
-* Domain-adaptive pretraining is **not universally beneficial**
-* Effectiveness depends on **domain similarity and data distribution**
-* Strong baselines can already capture general language patterns effectively
+* Use domain-specific datasets (finance, legal, medical)
+* Increase MLM training scale (more data, more epochs)
+* Experiment with larger models (BERT, RoBERTa)
+* Explore long-context models (Longformer, etc.)
 
 ---
 
@@ -137,6 +129,16 @@ This project demonstrates that:
 * PyTorch
 * Datasets library
 * Scikit-learn
+
+---
+
+## 🧭 Conclusion
+
+This project demonstrates that:
+
+* Domain-adaptive pretraining is **not universally beneficial**
+* Effectiveness depends on **domain similarity**
+* Strong pretrained models already generalize well on common datasets
 
 ---
 
